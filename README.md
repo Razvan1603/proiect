@@ -1,4 +1,32 @@
 # proiect
+## SARCINA 1. Model de Clasificare a Intențiilor
+
+Acest repository găzduiește un model de procesare a limbajului natural bazat pe arhitectura Romanian BERT, antrenat pentru clasificarea textelor în 7 categorii distincte.
+
+Structura modelului:
+Fișierele esențiale pentru rularea modelului se află în folderul intent_model_final/:
+config.json – Conține arhitectura modelului și maparea ID-urilor către clase.
+tokenizer.json & tokenizer_config.json – Fișiere necesare pentru pre-procesarea textului.
+
+DESCARCA_MODELUL_DE_AICI.txt – Link către stocarea externă (Google Drive) pentru fișierul de greutăți model.safetensors (~400MB).
+
+## Antrenare și Validare
+Modelul a fost antrenat pe un set de date specific, respectând următoarele rigori tehnice:
+
+Split de Date: S-a utilizat o metodă de împărțire 80% antrenare / 20% testare.
+Randomizare: Datele au fost amestecate aleatoriu și stratificate pentru a menține proporția claselor în ambele seturi.
+Performanță: Modelul a fost evaluat pe setul de test (date nevăzute), obținând rezultate optime pentru integrarea în producție.
+
+##Categorii Clasificate (Intenții)
+Cele 7 clase pe care modelul le poate identifica sunt:
+- [SALUT]
+- [INTREBARE]
+- [HELP]
+- [RECLAMATIE]
+- [MULTUMIRE]
+- [PREZENTARE]
+- [SMALL_TALK]
+
 
 ## Sarcina 3 - Backend, API si Interfata
 
