@@ -1,4 +1,6 @@
-# Sarcina 3 - Backend, API si Interfata
+# proiect
+
+## Sarcina 3 - Backend, API si Interfata
 
 Aplicatie demo pentru chatbot de suport social media. Partea aceasta leaga componentele colegilor intr-un produs utilizabil:
 
