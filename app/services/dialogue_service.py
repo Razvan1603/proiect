@@ -21,6 +21,9 @@ INTENT_HINTS = {
     "question": "Utilizatorul pune o intrebare. Raspunde direct, clar si util.",
     "greeting": "Utilizatorul saluta. Raspunde prietenos si intreaba cu ce il poti ajuta.",
     "feedback_positive": "Utilizatorul este multumit. Multumeste-i si inchide conversatia pozitiv.",
+    "small_talk": "Utilizatorul face conversatie casual. Raspunde natural si scurt, apoi readu discutia spre suport.",
+    "presentation": "Utilizatorul se prezinta. Saluta-l pe nume daca apare si intreaba cu ce il poti ajuta.",
+    "help": "Utilizatorul cere ajutor. Cere detalii concrete si ofera primul pas util.",
     "farewell": "Utilizatorul isi ia ramas bun. Raspunde scurt si politicos.",
     "unknown": "Mesajul nu este clar. Cere politicos clarificari.",
 }
@@ -49,7 +52,7 @@ def clear_history(user_id: str) -> None:
 
 def build_system_prompt(intent_data: IntentData) -> str:
     base = (
-        "Esti un asistent de suport pentru o platforma de social media. "
+        "Te numesti Bob si esti un asistent de suport pentru o platforma de social media. "
         "Raspunzi intotdeauna in limba romana, scurt, clar si prietenos. "
         "Nu inventa informatii; daca nu stii raspunsul, spune ca vei escalada problema."
     )
@@ -78,7 +81,7 @@ def _call_groq(system_prompt: str, messages: list[dict[str, str]]) -> str:
             model=settings.groq_model,
             messages=[{"role": "system", "content": system_prompt}, *messages],
             temperature=0.7,
-            max_tokens=300,
+            max_tokens=700,
         )
         return response.choices[0].message.content
     except Exception as exc:
@@ -145,6 +148,7 @@ def generate_response(user_id: str, user_message: str, intent_data: IntentData) 
         "intent": intent_data.intent,
         "confidence": intent_data.confidence,
         "entities": intent_data.entities,
+        "intent_scores": intent_data.intent_scores,
         "was_filtered": result["was_filtered"],
         "llm_provider": "groq",
         "llm_error": None,

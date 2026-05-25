@@ -20,7 +20,7 @@ class Settings:
     groq_model: str = os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile")
     use_mock_llm: bool = _env_flag("USE_MOCK_LLM", default=False)
     max_history: int = int(os.getenv("MAX_HISTORY", "10"))
-    max_response_length: int = int(os.getenv("MAX_RESPONSE_LENGTH", "500"))
+    max_response_length: int = int(os.getenv("MAX_RESPONSE_LENGTH", "2000"))
 
 
 settings = Settings()

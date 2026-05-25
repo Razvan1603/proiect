@@ -2,9 +2,11 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import settings
-from app.schemas import ChatRequest, ChatResponse, HealthResponse, ResetResponse
+from app.schemas import ChatRequest, ChatResponse, HealthResponse, IntentData, IntentRequest, ResetResponse
 from app.services.chat_orchestrator import process_chat
 from app.services.dialogue_service import LLMServiceError, clear_history, get_history, interaction_log
+from app.services.intent_classifier import IntentServiceError
+from app.services.intent_service import detect_intent
 
 app = FastAPI(
     title="Social Media Support Chatbot API",
@@ -45,8 +47,18 @@ def health() -> HealthResponse:
 def chat(request: ChatRequest) -> ChatResponse:
     try:
         return process_chat(request)
+    except IntentServiceError as exc:
+        raise HTTPException(status_code=500, detail=str(exc)) from exc
     except LLMServiceError as exc:
         raise HTTPException(status_code=502, detail=str(exc)) from exc
+
+
+@app.post("/intent", response_model=IntentData, tags=["intent"])
+def intent(request: IntentRequest) -> IntentData:
+    try:
+        return detect_intent(request.message)
+    except IntentServiceError as exc:
+        raise HTTPException(status_code=500, detail=str(exc)) from exc
 
 
 @app.post("/reset/{user_id}", response_model=ResetResponse, tags=["chat"])

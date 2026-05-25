@@ -1,9 +1,16 @@
-from transformers import pipeline
+from pathlib import Path
+import sys
 
-pipe = pipeline("text-classification", model="./intent_model_final")
 
-def get_intent(text):
-    result = pipe(text, return_all_scores=True)
-    return result[0]
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(PROJECT_ROOT))
 
-print(get_intent("De ce nu functioneaza aplicatia asta"))
+from app.services.intent_service import detect_intent
+
+
+def get_intent(text: str) -> dict:
+    return detect_intent(text).model_dump()
+
+
+if __name__ == "__main__":
+    print(get_intent("De ce nu functioneaza aplicatia asta"))

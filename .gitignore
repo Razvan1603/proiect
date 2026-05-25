@@ -4,4 +4,7 @@ __pycache__/
 .env
 .DS_Store
 interaction_log.csv
-
+model_final/model.safetensors
+model_final/pytorch_model.bin
+model_final/*.bin
+script.txt

@@ -10,7 +10,7 @@ load_dotenv(dotenv_path=".env", override=True)
 API_BASE_URL = os.getenv("API_BASE_URL", "http://localhost:8000").rstrip("/")
 
 st.set_page_config(
-    page_title="Demo Chatbot Suport",
+    page_title="Bob - Chatbot Suport",
     layout="centered",
 )
 
@@ -60,6 +60,7 @@ def ensure_state() -> None:
     st.session_state.setdefault("messages", [])
     st.session_state.setdefault("last_meta", None)
     st.session_state.setdefault("user_id", "user_001")
+    st.session_state.setdefault("show_analysis", False)
 
 
 ensure_state()
@@ -90,11 +91,14 @@ with st.sidebar:
     st.caption("Contract API")
     st.code('{"user_id": "user_001", "message": "text"}', language="json")
 
-st.title("Chatbot suport social media")
-st.caption("Interfata Streamlit pentru Sarcina 3: trimite mesajul catre FastAPI, primeste intentul si raspunsul generat.")
+st.title("Bob")
+st.caption("Chatbot suport social media")
+
 
 for item in st.session_state.messages:
     with st.chat_message(item["role"]):
+        if item["role"] == "assistant":
+            st.markdown("**Bob**")
         st.markdown(item["content"])
 
 if prompt := st.chat_input("Scrie un mesaj pentru chatbot..."):
@@ -103,6 +107,7 @@ if prompt := st.chat_input("Scrie un mesaj pentru chatbot..."):
         st.markdown(prompt)
 
     with st.chat_message("assistant"):
+        st.markdown("**Bob**")
         with st.spinner("Generez raspunsul..."):
             try:
                 payload = {"user_id": st.session_state.user_id, "message": prompt}
@@ -119,16 +124,37 @@ if prompt := st.chat_input("Scrie un mesaj pentru chatbot..."):
 if st.session_state.last_meta:
     meta = st.session_state.last_meta
     st.markdown("---")
-    st.markdown(
-        f"""
-        <div class="meta-box">
-            <span class="status-badge">intent: {meta["intent"]}</span>
-            <span class="status-badge">confidence: {meta["confidence"]:.2f}</span>
-            <span class="status-badge">provider: {meta["llm_provider"]}</span>
-            <br><br>
-            <strong>Entitati:</strong> {meta["entities"] or "{}"}
-            {'<br><strong>LLM fallback:</strong> ' + meta["llm_error"] if meta.get("llm_error") else ''}
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
+    button_label = "Ascunde analiza intentului" if st.session_state.show_analysis else "Arata analiza intentului"
+    if st.button(button_label, use_container_width=True):
+        st.session_state.show_analysis = not st.session_state.show_analysis
+        st.rerun()
+
+    if st.session_state.show_analysis:
+        st.markdown(
+            f"""
+            <div class="meta-box">
+                <span class="status-badge">intent: {meta["intent"]}</span>
+                <span class="status-badge">confidence: {meta["confidence"]:.2f}</span>
+                <span class="status-badge">provider: {meta["llm_provider"]}</span>
+                <br><br>
+                <strong>Entitati:</strong> {meta["entities"] or "{}"}
+                {'<br><strong>LLM fallback:</strong> ' + meta["llm_error"] if meta.get("llm_error") else ''}
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+        if meta.get("intent_scores"):
+            st.caption("Probabilitati intent BERT")
+            st.dataframe(
+                [
+                    {
+                        "intent": item["intent"],
+                        "label_model": item["label"],
+                        "probabilitate": round(item["confidence"], 4),
+                    }
+                    for item in meta["intent_scores"]
+                ],
+                hide_index=True,
+                use_container_width=True,
+            )

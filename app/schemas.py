@@ -3,16 +3,27 @@ from typing import Any
 from pydantic import BaseModel, Field
 
 
+class IntentScore(BaseModel):
+    intent: str
+    label: str
+    confidence: float = Field(ge=0.0, le=1.0)
+
+
 class IntentData(BaseModel):
     intent: str = Field(default="unknown", examples=["complaint"])
     confidence: float = Field(default=0.0, ge=0.0, le=1.0, examples=[0.87])
     entities: dict[str, Any] = Field(default_factory=dict)
+    intent_scores: list[IntentScore] = Field(default_factory=list)
 
 
 class ChatRequest(BaseModel):
     user_id: str | int = Field(examples=["user_001"])
     message: str = Field(min_length=1, examples=["Nu imi merge aplicatia"])
     intent_data: IntentData | None = None
+
+
+class IntentRequest(BaseModel):
+    message: str = Field(min_length=1, examples=["Nu imi merge aplicatia"])
 
 
 class ChatResponse(BaseModel):
@@ -22,6 +33,7 @@ class ChatResponse(BaseModel):
     intent: str
     confidence: float
     entities: dict[str, Any]
+    intent_scores: list[IntentScore] = Field(default_factory=list)
     was_filtered: bool
     llm_provider: str
     llm_error: str | None = None
