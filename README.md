@@ -1,5 +1,5 @@
 # proiect
-## SARCINA 1. Model de Clasificare a Intențiilor
+##Model de Clasificare a Intențiilor
 
 Acest repository găzduiește un model de procesare a limbajului natural bazat pe arhitectura Romanian BERT, antrenat pentru clasificarea textelor în 7 categorii distincte.
 
@@ -28,7 +28,7 @@ Cele 7 clase pe care modelul le poate identifica sunt:
 - [SMALL_TALK]
 
 
-## Sarcina 3 - Backend, API si Interfata
+## Backend, API si Interfata
 
 Aplicatie demo pentru chatbot de suport social media. Partea aceasta leaga componentele colegilor intr-un produs utilizabil:
 
@@ -83,7 +83,7 @@ Output:
 }
 ```
 
-Intentul nu mai este mock. Backend-ul foloseste obligatoriu modelul BERT din `model_final/model.safetensors`, prin `transformers.pipeline`. Daca fisierul `model.safetensors` sau dependintele `transformers`, `torch`, `safetensors` lipsesc, endpoint-ul returneaza eroare in loc sa foloseasca alt classifier. Adapterul public pentru Sarcina 1 este `detect_intent()` din `app/services/intent_service.py`, iar acesta returneaza mereu formatul comun: `intent`, `confidence`, `entities`.
+Intentul nu mai este mock. Backend-ul foloseste obligatoriu modelul BERT din `model_final/model.safetensors`, prin `transformers.pipeline`. Daca fisierul `model.safetensors` sau dependintele `transformers`, `torch`, `safetensors` lipsesc, endpoint-ul returneaza eroare in loc sa foloseasca alt classifier. Adapterul public pentru este `detect_intent()` din `app/services/intent_service.py`, iar acesta returneaza mereu formatul comun: `intent`, `confidence`, `entities`.
 
 Notebook-ul `notebooks/Antrenarea_modelului.ipynb` descrie varianta Transformer/BERT. Greutatile mari ale modelului nu trebuie urcate direct in GitHub; sunt pastrate prin Drive/Git LFS, iar `.gitignore` exclude `model_final/model.safetensors`.
 
@@ -224,10 +224,10 @@ curl -X POST http://localhost:8004/intent \
   -d '{"message":"Buna, am eroarea 403 cand incerc sa ma loghez"}'
 ```
 
-## Ce Se Prezinta La Demo
+## Funcționalitatea proiectului
 
 1. Utilizatorul scrie un mesaj in Streamlit.
 2. Streamlit trimite JSON catre `/chat`.
-3. Backend-ul detecteaza intentul cu modelul Sarcinii 1.
+3. Backend-ul detecteaza intentul cu modelul antrenat.
 4. Backend-ul trimite mesajul si intentul catre Groq LLM.
 5. Raspunsul apare in interfata. Detaliile tehnice se pot afisa/ascunde din butonul `Arata analiza intentului`, unde apar intentul ales, confidence, providerul LLM si probabilitatile pentru toate intenturile evaluate de BERT.
