@@ -30,7 +30,7 @@ Cele 7 clase pe care modelul le poate identifica sunt:
 
 ## Backend, API si Interfata
 
-Aplicatie demo pentru chatbot de suport social media. Partea aceasta leaga componentele colegilor intr-un produs utilizabil:
+Aplicatie demo pentru chatbot de suport social media.
 
 - Backend FastAPI cu endpoint `/chat`
 - Interfata Streamlit pentru demo live
